@@ -82,7 +82,7 @@
                 const marker = L.marker([lat, lng]).addTo(map).bindPopup(`বাস নং ${i}`);
                 const card = document.createElement('div');
                 card.className = 'bus-item';
-                card.innerHTML = `<strong>যশোর এক্সপ্রেস - ০${i}</strong>`;
+                card.innerHTML = `<strong>JUST BUS - ০${i}</strong>`;
                 card.onclick = () => {
                     map.setView([lat, lng], 15);
                     marker.openPopup();
@@ -94,4 +94,5 @@
     </script>
 </body>
 </html>
+
 
