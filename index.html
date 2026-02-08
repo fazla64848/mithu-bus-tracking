@@ -9,14 +9,15 @@
         * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; position: relative; background: #f4f4f4; }
 
-        /* ম্যাপের ওপরের মেনু বাটন */
+        /* ম্যাপের ওপরের সবুজ মেনু বাটন */
         .hamburger-menu {
             position: absolute; top: 20px; left: 20px; z-index: 1100;
             background: #27ae60; color: white; border: none;
-            padding: 10px 15px; border-radius: 8px; cursor: pointer;
+            padding: 8px 15px; border-radius: 8px; cursor: pointer;
             font-size: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             display: flex; align-items: center; gap: 10px;
         }
+        /* মেনু বাটনের ভেতর ছোট লোগো */
         .menu-logo-small { height: 25px; width: 25px; border-radius: 50%; background: white; padding: 2px; }
 
         /* লগইন স্ক্রিন */
@@ -34,28 +35,27 @@
         }
         #sidebar.active { left: 0; }
 
-        /* সাইডবার হেডার - যেখানে লোগোটি পরিষ্কারভাবে দেখা যাবে */
+        /* সাইডবার হেডার - যেখানে লোগো থাকবে */
         .header { 
             background: #27ae60; color: white; padding: 20px; 
             display: flex; justify-content: space-between; align-items: center; 
         }
         .header-left { display: flex; flex-direction: column; gap: 5px; }
         
-        /* লোগো ডিজাইন: সাদা ব্যাকগ্রাউন্ড ও শ্যাডো দেওয়া হয়েছে যাতে পরিষ্কার বোঝা যায় */
+        /* লোগো ডিজাইন - সাদা ব্যাকগ্রাউন্ড ও শ্যাডো দেওয়া হয়েছে */
         .header-logo { 
-            height: 70px; width: 70px; 
+            height: 75px; width: 75px; 
             border-radius: 50%; 
             border: 3px solid white; 
             background: white; 
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            object-fit: contain; /* লোগোটি যেন চ্যাপ্টা না হয়ে যায় */
+            object-fit: cover;
         }
 
         .back-btn {
             background: #ffffff; color: #27ae60; border: none;
             padding: 6px 15px; border-radius: 6px; cursor: pointer;
             font-weight: bold; font-size: 14px; width: fit-content;
-            margin-bottom: 5px;
         }
         .host-badge { background: rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 12px; font-size: 12px; width: fit-content; }
         
@@ -77,7 +77,7 @@
 <body>
 
     <button class="hamburger-menu" id="main-menu-btn" onclick="toggleMenu()">
-        <img src="just.jpg" alt="Logo" class="menu-logo-small">
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/52/Jashore_University_of_Science_and_Technology_Logo.png/220px-Jashore_University_of_Science_and_Technology_Logo.png" alt="Logo" class="menu-logo-small">
         <span>☰ মেনু</span>
     </button>
 
@@ -96,10 +96,10 @@
         <div class="header">
             <div class="header-left">
                 <button class="back-btn" onclick="toggleMenu()">← Back</button>
-                <div id="user-display" style="font-size: 18px; font-weight: bold;"></div>
+                <div id="user-display" style="font-size: 18px; font-weight: bold; margin-top: 5px;"></div>
                 <div class="host-badge">Host Mode</div>
             </div>
-            <img src="just.jpg" alt="JUST Logo" class="header-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/52/Jashore_University_of_Science_and_Technology_Logo.png/220px-Jashore_University_of_Science_and_Technology_Logo.png" alt="JUST Logo" class="header-logo">
         </div>
         <div id="bus-list">
             <p style="color: #888; font-size: 14px; margin-bottom: 15px;">চলন্ত বাসের তালিকা:</p>
