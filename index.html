@@ -9,23 +9,13 @@
         * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; position: relative; }
 
-        /* ৩ ডট/লাইন মেনু বাটন */
+        /* ৩ লাইন মেনু বাটন */
         .hamburger-menu {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 1100;
-            background: #27ae60;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            position: absolute; top: 20px; left: 20px; z-index: 1100;
+            background: #27ae60; color: white; border: none;
+            padding: 10px 15px; border-radius: 8px; cursor: pointer;
+            font-size: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: flex; align-items: center; gap: 8px;
         }
 
         /* লগইন স্ক্রিন */
@@ -34,7 +24,7 @@
         input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
         .btn-login { width: 100%; padding: 12px; background: #27ae60; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
 
-        /* সাইডবার (স্ক্রিনশট অনুযায়ী ডিজাইন) */
+        /* সাইডবার ডিজাইন */
         #sidebar { 
             width: 320px; background: #f0f0f0; border-right: 1px solid #ccc; 
             display: flex; flex-direction: column; z-index: 1050; 
@@ -43,8 +33,7 @@
         }
         #sidebar.active { left: 0; }
 
-        .header { background: #27ae60; color: white; padding: 25px 15px; text-align: center; position: relative; }
-        .host-badge { background: #2ecc71; padding: 2px 10px; border-radius: 15px; font-size: 12px; display: inline-block; margin-top: 5px; }
+        .header { background: #27ae60; color: white; padding: 25px 15px; text-align: center; }
         .logout-btn { background: #e74c3c; color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; margin-top: 15px; font-weight: bold; width: 80%; }
         
         #bus-list { flex-grow: 1; overflow-y: auto; padding: 15px; }
@@ -54,8 +43,6 @@
             border: 1px solid #e0e0e0;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-        .bus-item strong { font-size: 16px; color: #333; }
-        .bus-item p { margin: 5px 0 0; font-size: 13px; color: #666; }
 
         #map { width: 100%; height: 100%; z-index: 1; }
         #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1040; }
@@ -80,11 +67,9 @@
     <div id="sidebar">
         <div class="header">
             <div id="user-display" style="font-size: 20px; font-weight: bold;"></div>
-            <div class="host-badge">Host Mode</div><br>
             <button class="logout-btn" onclick="location.reload()">লগআউট (Back)</button>
         </div>
-        <div id="bus-list">
-            </div>
+        <div id="bus-list"></div>
     </div>
     
     <div id="map"></div>
@@ -99,41 +84,35 @@
         function checkLogin() {
             const user = document.getElementById('username').value;
             const pass = document.getElementById('password').value;
-            // আপনার ইউজারনাম ও পাসওয়ার্ড
             if((user === 'mithu' && pass === '231110') || (user === 'JUST' && pass === '1122')) {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('user-display').innerHTML = `স্বাগতম, ${user}`;
                 initMap();
-            } else { 
-                document.getElementById('err').innerText = "ভুল তথ্য! সঠিক ইউজারনাম দিন।"; 
-            }
+            } else { document.getElementById('err').innerText = "ভুল তথ্য!"; }
         }
 
         function initMap() {
             const jashoreLoc = [23.1664, 89.2081];
-            const map = L.map('map').setView(jashoreLoc, 13);
             
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap'
-            }).addTo(map);
+            // এখানে zoomControl: false যোগ করা হয়েছে জুম বাটন সরাতে
+            const map = L.map('map', {
+                zoomControl: false 
+            }).setView(jashoreLoc, 13);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
             const busListDiv = document.getElementById('bus-list');
-            
-            // ৭টি বাসের ডামি ডাটা
             for(let i=1; i<=7; i++) {
                 let lat = jashoreLoc[0] + (Math.random() - 0.5) * 0.04;
                 let lng = jashoreLoc[1] + (Math.random() - 0.5) * 0.04;
-                
-                const marker = L.marker([lat, lng]).addTo(map).bindPopup(`<b>যশোর এক্সপ্রেস - ০${i}</b>`);
-                
+                const marker = L.marker([lat, lng]).addTo(map).bindPopup(`যশোর এক্সপ্রেস - ০${i}`);
                 const card = document.createElement('div');
                 card.className = 'bus-item';
                 card.innerHTML = `<strong>যশোর এক্সপ্রেস - ০${i}</strong><p>অবস্থা: সচল</p>`;
-                
                 card.onclick = () => {
                     map.setView([lat, lng], 16);
                     marker.openPopup();
-                    if(window.innerWidth < 1000) toggleMenu(); // ক্লিক করলে মেনু অটো বন্ধ হবে
+                    if(window.innerWidth < 1000) toggleMenu();
                 };
                 busListDiv.appendChild(card);
             }
