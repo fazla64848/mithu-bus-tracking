@@ -9,13 +9,13 @@
         * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; position: relative; background: #f4f4f4; }
 
-        /* লোগোসহ মেনু বাটন (ম্যাপের ওপরে) */
+        /* ম্যাপের ওপরের মেনু বাটন */
         .hamburger-menu {
             position: absolute; top: 20px; left: 20px; z-index: 1100;
             background: #27ae60; color: white; border: none;
-            padding: 8px 15px; border-radius: 8px; cursor: pointer;
+            padding: 10px 15px; border-radius: 8px; cursor: pointer;
             font-size: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            display: flex; align-items: center; gap: 10px; transition: 0.3s;
+            display: flex; align-items: center; gap: 10px;
         }
         .menu-logo-small { height: 25px; width: 25px; border-radius: 50%; background: white; padding: 2px; }
 
@@ -25,7 +25,7 @@
         input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; outline: none; }
         .btn-login { width: 100%; padding: 12px; background: #27ae60; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
 
-        /* সাইডবার ডিজাইন */
+        /* সাইডবার */
         #sidebar { 
             width: 320px; background: #ffffff; border-right: 1px solid #ccc; 
             display: flex; flex-direction: column; z-index: 1200; 
@@ -34,18 +34,28 @@
         }
         #sidebar.active { left: 0; }
 
-        /* সাইডবার হেডার - যেখানে ডান পাশে লোগো থাকবে */
+        /* সাইডবার হেডার - যেখানে লোগোটি পরিষ্কারভাবে দেখা যাবে */
         .header { 
             background: #27ae60; color: white; padding: 20px; 
-            display: flex; justify-content: space-between; align-items: flex-start; 
+            display: flex; justify-content: space-between; align-items: center; 
         }
-        .header-left { display: flex; flex-direction: column; gap: 8px; }
-        .header-logo { height: 65px; width: 65px; border-radius: 50%; border: 2px solid white; background: white; }
+        .header-left { display: flex; flex-direction: column; gap: 5px; }
+        
+        /* লোগো ডিজাইন: সাদা ব্যাকগ্রাউন্ড ও শ্যাডো দেওয়া হয়েছে যাতে পরিষ্কার বোঝা যায় */
+        .header-logo { 
+            height: 70px; width: 70px; 
+            border-radius: 50%; 
+            border: 3px solid white; 
+            background: white; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            object-fit: contain; /* লোগোটি যেন চ্যাপ্টা না হয়ে যায় */
+        }
 
         .back-btn {
             background: #ffffff; color: #27ae60; border: none;
             padding: 6px 15px; border-radius: 6px; cursor: pointer;
             font-weight: bold; font-size: 14px; width: fit-content;
+            margin-bottom: 5px;
         }
         .host-badge { background: rgba(255,255,255,0.2); padding: 3px 10px; border-radius: 12px; font-size: 12px; width: fit-content; }
         
@@ -73,11 +83,11 @@
 
     <div id="login-screen">
         <div class="login-box">
-            <h1 style="color:#27ae60; margin-bottom: 25px;">Mithu Just</h1>
+            <h1 style="color:#27ae60;">Mithu Just</h1>
             <input type="text" id="username" placeholder="ইউজারনাম">
             <input type="password" id="password" placeholder="পাসওয়ার্ড">
             <button class="btn-login" onclick="checkLogin()">লগইন করুন</button>
-            <p id="err" style="color: red; margin-top: 15px; font-size: 14px;"></p>
+            <p id="err" style="color: red; margin-top: 15px;"></p>
         </div>
     </div>
 
@@ -86,7 +96,7 @@
         <div class="header">
             <div class="header-left">
                 <button class="back-btn" onclick="toggleMenu()">← Back</button>
-                <div id="user-display" style="font-size: 18px; font-weight: bold; margin-top: 5px;"></div>
+                <div id="user-display" style="font-size: 18px; font-weight: bold;"></div>
                 <div class="host-badge">Host Mode</div>
             </div>
             <img src="just.jpg" alt="JUST Logo" class="header-logo">
@@ -106,16 +116,9 @@
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
             const menuBtn = document.getElementById('main-menu-btn');
-
             sidebar.classList.toggle('active');
             overlay.classList.toggle('active');
-
-            // মেনু খুললে বাইরের বাটনটি হাইড হবে
-            if (sidebar.classList.contains('active')) {
-                menuBtn.style.display = 'none';
-            } else {
-                menuBtn.style.display = 'flex';
-            }
+            menuBtn.style.display = sidebar.classList.contains('active') ? 'none' : 'flex';
         }
 
         function checkLogin() {
@@ -126,7 +129,7 @@
                 document.getElementById('user-display').innerText = `স্বাগতম, ${user}`;
                 initMap();
             } else { 
-                document.getElementById('err').innerText = "ভুল ইউজারনাম বা পাসওয়ার্ড!"; 
+                document.getElementById('err').innerText = "ভুল তথ্য!"; 
             }
         }
 
