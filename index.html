@@ -7,84 +7,90 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; position: relative; }
+
+        /* ৩ ডট/লাইন মেনু বাটন */
+        .hamburger-menu {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1100;
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         /* লগইন স্ক্রিন */
-        #login-screen { position: fixed; inset: 0; background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=2000'); background-size: cover; background-position: center; z-index: 9999; display: flex; align-items: center; justify-content: center; }
-        .login-box { background: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 15px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.3); width: 350px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; outline: none; }
+        #login-screen { position: fixed; inset: 0; background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=2000'); background-size: cover; z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .login-box { background: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 15px; text-align: center; width: 350px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
         .btn-login { width: 100%; padding: 12px; background: #27ae60; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
 
-        /* টপ নেভিগেশন বার */
-        .navbar { background: #27ae60; color: white; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; z-index: 1001; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .menu-icon { font-size: 24px; cursor: pointer; display: flex; align-items: center; gap: 10px; }
-        
-        /* সাইডবার (বাস লিস্ট) */
+        /* সাইডবার (স্ক্রিনশট অনুযায়ী ডিজাইন) */
         #sidebar { 
-            position: fixed; top: 0; left: -320px; width: 300px; height: 100%; 
-            background: #fff; z-index: 1002; transition: 0.3s ease; 
-            box-shadow: 2px 0 10px rgba(0,0,0,0.2); display: flex; flex-direction: column; 
+            width: 320px; background: #f0f0f0; border-right: 1px solid #ccc; 
+            display: flex; flex-direction: column; z-index: 1050; 
+            position: absolute; left: -320px; height: 100%; 
+            transition: 0.3s ease; 
         }
         #sidebar.active { left: 0; }
-        .sidebar-header { background: #27ae60; color: white; padding: 20px; text-align: center; }
-        
-        #bus-list { flex-grow: 1; overflow-y: auto; padding: 15px; background: #f4f4f4; }
-        .bus-item { 
-            padding: 15px; margin-bottom: 10px; background: white; 
-            border-radius: 8px; cursor: pointer; border: 1px solid #ddd; 
-            transition: 0.2s; font-weight: 500;
-        }
-        .bus-item:hover { background: #e8f5e9; border-color: #27ae60; }
-        
-        /* ম্যাপ */
-        #map { flex-grow: 1; width: 100%; z-index: 1; }
-        
-        /* ওভারলে */
-        #overlay { 
-            display: none; position: fixed; inset: 0; 
-            background: rgba(0,0,0,0.4); z-index: 1001; 
-        }
-        #overlay.active { display: block; }
 
-        .logout-btn { background: #ff4757; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-top: 8px; }
+        .header { background: #27ae60; color: white; padding: 25px 15px; text-align: center; position: relative; }
+        .host-badge { background: #2ecc71; padding: 2px 10px; border-radius: 15px; font-size: 12px; display: inline-block; margin-top: 5px; }
+        .logout-btn { background: #e74c3c; color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; margin-top: 15px; font-weight: bold; width: 80%; }
+        
+        #bus-list { flex-grow: 1; overflow-y: auto; padding: 15px; }
+        .bus-item { 
+            padding: 15px; margin-bottom: 12px; background: white; 
+            border-radius: 10px; cursor: pointer; 
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .bus-item strong { font-size: 16px; color: #333; }
+        .bus-item p { margin: 5px 0 0; font-size: 13px; color: #666; }
+
+        #map { width: 100%; height: 100%; z-index: 1; }
+        #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1040; }
+        #overlay.active { display: block; }
     </style>
 </head>
 <body>
 
+    <button class="hamburger-menu" onclick="toggleMenu()">☰ <span>মেনু</span></button>
+
     <div id="login-screen">
         <div class="login-box">
-            <h2 style="color: #27ae60; margin-bottom: 20px;">Mithu Just</h2>
+            <h1 style="color:#27ae60;">Mithu Just</h1>
             <input type="text" id="username" placeholder="ইউজারনাম">
             <input type="password" id="password" placeholder="পাসওয়ার্ড">
-            <button class="btn-login" onclick="checkLogin()">প্রবেশ করুন</button>
-            <p id="err" style="color: red; font-size: 14px; margin-top: 10px;"></p>
+            <button class="btn-login" onclick="checkLogin()">লগইন</button>
+            <p id="err" style="color: red;"></p>
         </div>
-    </div>
-
-    <div class="navbar">
-        <div class="menu-icon" onclick="toggleMenu()">
-            <span>☰</span> <small style="font-size: 16px;">বাস লিস্ট</small>
-        </div>
-        <div style="font-weight: bold;">Mithu Just Tracking</div>
     </div>
 
     <div id="overlay" onclick="toggleMenu()"></div>
     <div id="sidebar">
-        <div class="sidebar-header">
-            <div id="user-display" style="font-size: 18px;"></div>
-            <button class="logout-btn" onclick="location.reload()">লগআউট</button>
+        <div class="header">
+            <div id="user-display" style="font-size: 20px; font-weight: bold;"></div>
+            <div class="host-badge">Host Mode</div><br>
+            <button class="logout-btn" onclick="location.reload()">লগআউট (Back)</button>
         </div>
         <div id="bus-list">
-            <h3 style="font-size: 16px; color: #666; margin-bottom: 15px;">সকল বাসের তালিকা:</h3>
             </div>
     </div>
-
+    
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        let map; // গ্লোবাল ম্যাপ ভ্যারিয়েবল
-
         function toggleMenu() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('overlay').classList.toggle('active');
@@ -93,21 +99,19 @@
         function checkLogin() {
             const user = document.getElementById('username').value;
             const pass = document.getElementById('password').value;
-            // আপনার দেওয়া পাসওয়ার্ড এবং ইউজারনাম
+            // আপনার ইউজারনাম ও পাসওয়ার্ড
             if((user === 'mithu' && pass === '231110') || (user === 'JUST' && pass === '1122')) {
-                document.getElementById('login-screen').style.fadeOut = "slow";
                 document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('user-display').innerHTML = `স্বাগতম, <b>${user}</b>`;
+                document.getElementById('user-display').innerHTML = `স্বাগতম, ${user}`;
                 initMap();
             } else { 
-                document.getElementById('err').innerText = "ভুল ইউজারনাম বা পাসওয়ার্ড!"; 
+                document.getElementById('err').innerText = "ভুল তথ্য! সঠিক ইউজারনাম দিন।"; 
             }
         }
 
         function initMap() {
-            // যশোর এর লোকেশন
             const jashoreLoc = [23.1664, 89.2081];
-            map = L.map('map').setView(jashoreLoc, 13);
+            const map = L.map('map').setView(jashoreLoc, 13);
             
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap'
@@ -115,21 +119,21 @@
 
             const busListDiv = document.getElementById('bus-list');
             
-            // ডামি বাস ডেটা তৈরি (১০টি বাস)
-            for(let i=1; i<=10; i++) {
+            // ৭টি বাসের ডামি ডাটা
+            for(let i=1; i<=7; i++) {
                 let lat = jashoreLoc[0] + (Math.random() - 0.5) * 0.04;
                 let lng = jashoreLoc[1] + (Math.random() - 0.5) * 0.04;
                 
-                const marker = L.marker([lat, lng]).addTo(map).bindPopup(`<b>JUST বাস নং ০${i}</b><br>অবস্থান: চলন্ত`);
+                const marker = L.marker([lat, lng]).addTo(map).bindPopup(`<b>যশোর এক্সপ্রেস - ০${i}</b>`);
                 
                 const card = document.createElement('div');
                 card.className = 'bus-item';
-                card.innerHTML = `🚌 &nbsp; JUST BUS - ০${i}`;
+                card.innerHTML = `<strong>যশোর এক্সপ্রেস - ০${i}</strong><p>অবস্থা: সচল</p>`;
                 
                 card.onclick = () => {
                     map.setView([lat, lng], 16);
                     marker.openPopup();
-                    toggleMenu(); // ক্লিক করলে মেনু বন্ধ হয়ে যাবে
+                    if(window.innerWidth < 1000) toggleMenu(); // ক্লিক করলে মেনু অটো বন্ধ হবে
                 };
                 busListDiv.appendChild(card);
             }
