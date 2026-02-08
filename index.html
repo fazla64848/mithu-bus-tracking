@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mithu Just - বাস ট্র্যাকিং</title>
+    <title>JUST - বাস ট্র্যাকিং</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; position: relative; background: #f4f4f4; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; position: relative; background: #f4f4f4; }
 
         /* লগইন স্ক্রিন */
         #login-screen {
@@ -37,6 +37,7 @@
         }
         #sidebar.active { left: 0; }
 
+        /* হেডার */
         .header { background: #27ae60; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
         .header-logo-container {
             height: 70px; width: 70px; border-radius: 50%; 
@@ -45,13 +46,14 @@
             display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
         .header-logo-container img { width: 90%; height: 90%; object-fit: contain; }
-        .header-logo-container span { color: #27ae60; font-weight: bold; font-size: 18px; }
+        .header-logo-container span { color: #27ae60; font-weight: bold; font-size: 14px; }
 
-        .back-btn { background: #ffffff; color: #27ae60; border: none; padding: 6px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .back-btn { background: #ffffff; color: #27ae60; border: none; padding: 6px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-bottom: 5px; }
         
+        /* বাসের লিস্ট */
         #bus-list { flex-grow: 1; overflow-y: auto; padding: 15px; background: #f9f9f9; }
-        .bus-item { padding: 15px; margin-bottom: 12px; background: white; border-radius: 10px; cursor: pointer; border: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .bus-item:hover { background: #f1f1f1; }
+        .bus-item { padding: 15px; margin-bottom: 12px; background: white; border-radius: 10px; cursor: pointer; border: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: 0.3s; }
+        .bus-item:hover { background: #e8f5e9; border-color: #27ae60; }
         .bus-item strong { display: block; color: #333; }
         .bus-item span { color: #27ae60; font-size: 13px; }
 
@@ -78,9 +80,9 @@
 
     <div id="sidebar">
         <div class="header">
-            <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; flex-direction: column;">
                 <button class="back-btn" onclick="toggleMenu()">← Back</button>
-                <div id="user-display" style="font-size: 18px; font-weight: bold;"></div>
+                <div id="user-display" style="font-size: 16px; font-weight: bold;"></div>
             </div>
             <div class="header-logo-container">
                 <img src="just.jpg" alt="JUST" onerror="this.style.display='none'">
@@ -88,8 +90,8 @@
             </div>
         </div>
         <div id="bus-list">
-            <p style="padding: 10px; color: #666;">চলন্ত বাসের তালিকা:</p>
-        </div>
+            <p style="padding: 10px; color: #666; font-weight: bold;">চলন্ত বাসের তালিকা:</p>
+            </div>
     </div>
     
     <div id="overlay" onclick="toggleMenu()"></div>
@@ -97,15 +99,15 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // বাসের ডামি ডাটা (অক্ষাংশ ও দ্রাঘিমাংশ)
+        // বাসের লোকেশন ডাটা (১, ২, ৬ নং বাস JUST ক্যাম্পাসে)
         const buses = [
-            { id: 1, name: "যশোর এক্সপ্রেস - ০১", lat: 23.1664, lng: 89.2081 },
-            { id: 2, name: "যশোর এক্সপ্রেস - ০২", lat: 23.1750, lng: 89.2150 },
-            { id: 3, name: "যশোর এক্সপ্রেস - ০৩", lat: 23.1600, lng: 89.1900 },
-            { id: 4, name: "যশোর এক্সপ্রেস - ০৪", lat: 23.1800, lng: 89.2300 },
-            { id: 5, name: "যশোর এক্সপ্রেস - ০৫", lat: 23.1500, lng: 89.2000 },
-            { id: 6, name: "যশোর এক্সপ্রেস - ০৬", lat: 23.1900, lng: 89.2100 },
-            { id: 7, name: "যশোর এক্সপ্রেস - ০৭", lat: 23.1700, lng: 89.2400 }
+            { id: 1, name: "যশোর এক্সপ্রেস - ০১", lat: 23.2321, lng: 89.1254, locName: "JUST ক্যাম্পাস" },
+            { id: 2, name: "যশোর এক্সপ্রেস - ০২", lat: 23.2335, lng: 89.1265, locName: "কেন্দ্রীয় লাইব্রেরি, JUST" },
+            { id: 3, name: "যশোর এক্সপ্রেস - ০৩", lat: 23.1695, lng: 89.2125, locName: "নিউ মার্কেট, যশোর" },
+            { id: 4, name: "যশোর এক্সপ্রেস - ০৪", lat: 23.1720, lng: 89.2000, locName: "পালবাড়ি মোড়" },
+            { id: 5, name: "যশোর এক্সপ্রেস - ০৫", lat: 23.1550, lng: 89.2150, locName: "যশোর রেল স্টেশন" },
+            { id: 6, name: "যশোর এক্সপ্রেস - ০৬", lat: 23.2310, lng: 89.1240, locName: "মেইন গেট, JUST" },
+            { id: 7, name: "যশোর এক্সপ্রেস - ০৭", lat: 23.1450, lng: 89.1950, locName: "চাচড়া মোড়" }
         ];
 
         let map;
@@ -130,38 +132,45 @@
             const menuBtn = document.getElementById('main-menu-btn');
             sidebar.classList.toggle('active');
             overlay.classList.toggle('active');
-            menuBtn.style.display = sidebar.classList.contains('active') ? 'none' : 'flex';
+            
+            // সাইডবার ওপেন থাকলে মেনু বাটন হাইড হবে
+            if(sidebar.classList.contains('active')) {
+                menuBtn.style.display = 'none';
+            } else {
+                menuBtn.style.display = 'flex';
+            }
         }
 
         function initMap() {
-            const jashoreLoc = [23.1664, 89.2081];
-            map = L.map('map', { zoomControl: false }).setView(jashoreLoc, 13);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            // শুরুর ভিউ যশোর শহরের ওপর (Zoom Level 13)
+            const jashoreCenter = [23.1664, 89.2081];
+            map = L.map('map', { zoomControl: false }).setView(jashoreCenter, 13);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(map);
 
             const busListDiv = document.getElementById('bus-list');
 
             buses.forEach(bus => {
-                // ম্যাপে লাল বৃত্তাকার মার্কার (গাড়ি হিসেবে) যোগ করা
-                const marker = L.circleMarker([bus.lat, bus.lng], {
-                    radius: 10,
-                    fillColor: "#ff0000", // লাল রঙ
-                    color: "#fff",
-                    weight: 2,
-                    opacity: 1,
-                    fillOpacity: 0.8
-                }).addTo(map);
+                // ম্যাপে নীল মার্কার যোগ করা
+                const marker = L.marker([bus.lat, bus.lng]).addTo(map);
+                marker.bindPopup(`<b>${bus.name}</b><br>অবস্থান: ${bus.locName}<br>অবস্থা: সচল`);
 
-                marker.bindPopup(`<b>${bus.name}</b><br>অবস্থা: সচল`);
-
-                // সাইডবারে লিস্ট আইটেম তৈরি
+                // সাইডবারে বাসের কার্ড তৈরি
                 const card = document.createElement('div');
                 card.className = 'bus-item';
-                card.innerHTML = `<strong>${bus.name}</strong><span>অবস্থা: সচল</span>`;
+                card.innerHTML = `
+                    <strong>${bus.name}</strong>
+                    <span>📍 ${bus.locName}</span><br>
+                    <span>অবস্থা: সচল</span>
+                `;
                 
-                // লিস্টে ক্লিক করলে ওই বাসের লোকেশনে ম্যাপ চলে যাবে
+                // লিস্টে ক্লিক করলে ওই বাসের লোকেশনে ক্যামেরা যাবে
                 card.onclick = () => {
-                    map.flyTo([bus.lat, bus.lng], 16);
+                    map.flyTo([bus.lat, bus.lng], 16, { duration: 2 });
                     marker.openPopup();
+                    // মোবাইল ভিউতে মেনু বন্ধ হবে ক্লিক করলে
                     if(window.innerWidth < 768) toggleMenu();
                 };
                 
