@@ -35,7 +35,7 @@
     <div id="login-screen">
         <div class="login-box">
             <h2>Mithu Just Login</h2>
-            <input type="text" id="username" placeholder="Username (Mithu/TB/STB)">
+            <input type="text" id="username" placeholder="Username ">
             <input type="password" id="password" placeholder="Password">
             <button class="btn-login" onclick="checkLogin()">Login</button>
             <p id="error-msg" style="color: red; margin-top: 10px; font-size: 14px;"></p>
@@ -100,7 +100,6 @@
 
             if(user==='Mithu' && pass==='2211') ok=true;
             else if(user==='TB' && pass==='1010') ok=true;
-            else if(user==='STB' && pass==='1212') ok=true;
 
             if(ok) {
                 document.getElementById('login-screen').style.display = 'none';
@@ -159,3 +158,4 @@
     </script>
 </body>
 </html>
+
