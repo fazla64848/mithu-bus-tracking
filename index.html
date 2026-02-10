@@ -6,147 +6,201 @@
     <title>Mithu Just - Tracking System</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        /* আপনার দেওয়া আগের সব স্টাইল এখানে থাকবে */
         * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; height: 100vh; overflow: hidden; background: #f4f4f4; }
-        .university-header { position: absolute; top: 4%; width: 100%; text-align: center; z-index: 10000; padding: 0 15px; pointer-events: none; }
-        .university-header h1 { color: white; font-size: clamp(1.1rem, 4.5vw, 2.2rem); font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; transform: perspective(500px) rotateX(10deg) skew(-5deg); text-shadow: 3px 5px 15px rgba(0,0,0,0.4); margin: 0; line-height: 1.2; }
-        #login-screen { position: fixed; inset: 0; background: linear-gradient(-45deg, #27ae60, #2ecc71, #1abc9c, #16a085); background-size: 400% 400%; animation: gradientBG 15s ease infinite; z-index: 9999; display: flex; align-items: center; justify-content: center; }
+
+        /* University Header */
+        .university-header {
+            position: absolute;
+            top: 4%;
+            width: 100%;
+            text-align: center;
+            z-index: 10000;
+            padding: 0 15px;
+            pointer-events: none;
+        }
+        .university-header h1 {
+            color: white;
+            font-size: clamp(1.1rem, 4.5vw, 2.2rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transform: perspective(500px) rotateX(10deg) skew(-5deg);
+            text-shadow: 3px 5px 15px rgba(0,0,0,0.4);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        /* Login Screen */
+        #login-screen {
+            position: fixed; inset: 0; 
+            background: linear-gradient(-45deg, #27ae60, #2ecc71, #1abc9c, #16a085);
+            background-size: 400% 400%; animation: gradientBG 15s ease infinite;
+            z-index: 9999; display: flex; align-items: center; justify-content: center;
+        }
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        .login-box { background: rgba(255, 255, 255, 0.95); padding: 35px; border-radius: 25px; text-align: center; width: 90%; max-width: 380px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); backdrop-filter: blur(10px); margin-top: 60px; }
+
+        .login-box { 
+            background: rgba(255, 255, 255, 0.95); padding: 35px; border-radius: 25px; 
+            text-align: center; width: 90%; max-width: 380px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); backdrop-filter: blur(10px);
+            margin-top: 60px;
+        }
         .login-box h2 { color: #27ae60; margin-bottom: 25px; font-weight: 800; }
         .login-box input { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 15px; outline: none; }
+        
         .radio-container { margin: 20px 0; text-align: left; background: #f9f9f9; padding: 15px; border-radius: 12px; border: 1px dashed #27ae60; }
+        .radio-container p { margin: 0 0 10px 0; font-weight: bold; color: #555; font-size: 14px; }
         .radio-group { display: flex; justify-content: space-around; }
+        .radio-group label { cursor: pointer; font-size: 14px; color: #333; display: flex; align-items: center; gap: 5px; }
+
         .btn-login { width: 100%; padding: 15px; background: #27ae60; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 17px; margin-top: 15px; transition: 0.3s; }
+        .btn-login:hover { background: #219150; transform: translateY(-2px); }
+        .btn-login:disabled { background: #95a5a6; cursor: not-allowed; transform: none; }
+
+        /* Sidebar & Map */
         .hamburger-menu { position: absolute; top: 20px; left: 20px; z-index: 1100; background: #27ae60; color: white; border: none; padding: 12px 18px; border-radius: 10px; cursor: pointer; display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        #sidebar { width: 320px; background: white; border-right: 1px solid #eee; display: flex; flex-direction: column; z-index: 1200; position: absolute; left: -320px; height: 100%; transition: 0.5s; }
+        #sidebar { width: 320px; background: white; border-right: 1px solid #eee; display: flex; flex-direction: column; z-index: 1200; position: absolute; left: -320px; height: 100%; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         #sidebar.active { left: 0; }
         .header { background: #27ae60; color: white; padding: 25px; text-align: center; }
-        #bus-list { flex-grow: 1; overflow-y: auto; padding: 15px; }
-        .bus-item { padding: 18px; margin-bottom: 12px; background: #fff; border: 1px solid #f0f0f0; border-radius: 12px; cursor: pointer; }
+        #bus-list { flex-grow: 1; overflow-y: auto; padding: 15px; background: #fdfdfd; }
+        .bus-item { padding: 18px; margin-bottom: 12px; background: #fff; border: 1px solid #f0f0f0; border-radius: 12px; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .bus-item:hover { border-color: #27ae60; background: #f0fff4; transform: scale(1.02); }
         #map { width: 100%; height: 100%; z-index: 1; }
-        #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 1150; }
+        #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 1150; backdrop-filter: blur(2px); }
         #overlay.active { display: block; }
+        
+        #error-msg a { color: #e74c3c; text-decoration: underline; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
-        <div class="university-header"><h1>Jashore University of Science and Technology</h1></div>
+        <div class="university-header">
+            <h1>Jashore University of Science and Technology</h1>
+        </div>
+
         <div class="login-box">
             <h2>Mithu Just</h2>
+            
             <div class="radio-container">
-                <p>Select Category:</p>
+                <p>Select Category to view:</p>
                 <div class="radio-group">
                     <label><input type="radio" name="view-pref" value="teacher" checked> Teacher's Bus</label>
                     <label><input type="radio" name="view-pref" value="student"> Student's Bus</label>
                 </div>
             </div>
-            <input type="text" id="username" placeholder="User Name (eee)">
-            <input type="password" id="password" placeholder="Password (1010)">
-            <button class="btn-login" onclick="handleLogin()">Login</button>
-            <p id="error-msg" style="color: #e74c3c;"></p>
+
+            <input type="text" id="username" placeholder="User Name">
+            <input type="password" id="password" placeholder="Password">
+            
+            <button class="btn-login" id="login-btn" onclick="handleLogin()">Login</button>
+            <p id="error-msg" style="color: #e74c3c; font-size: 13px; margin-top: 12px; font-weight: 500; min-height: 20px;"></p>
         </div>
     </div>
 
     <button class="hamburger-menu" id="main-menu-btn" onclick="toggleMenu()">☰ Menu</button>
+
     <div id="sidebar">
         <div class="header">
-            <button onclick="toggleMenu()" style="float:left; color:white; background:none; border:none; cursor:pointer;">✕ Close</button>
-            <div id="user-display">Panel</div>
+            <button style="float: left; background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer;" onclick="toggleMenu()">✕ Close</button>
+            <div id="user-display" style="font-weight: bold; font-size: 18px; margin-top: 10px;">Panel</div>
         </div>
         <div id="bus-list"></div>
     </div>
+    
     <div id="overlay" onclick="toggleMenu()"></div>
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-        // Firebase Config (image_1dfa37.png থেকে নেওয়া) [cite: 1, 2026-02-11]
-        const firebaseConfig = {
-            apiKey: "AIzaSyAFUh3A2opAIqv5ZoLJsa2rNMXk9NIvNIo",
-            authDomain: "just-bus-tracker.firebaseapp.com",
-            databaseURL: "https://just-bus-tracker-default-rtdb.firebaseio.com",
-            projectId: "just-bus-tracker",
-            storageBucket: "just-bus-tracker.appspot.com",
-            messagingSenderId: "394783730833",
-            appId: "1:394783730833:web:450835dbb66c31b44f2330"
+    <script>
+        const buses = {
+            t1: { name: "Teacher Bus - 01", lat: 23.2321, lng: 89.1254, type: "teacher", loc: "Campus Main Gate" },
+            t2: { name: "Teacher Bus - 02", lat: 23.2335, lng: 89.1265, type: "teacher", loc: "Palbari Mor" },
+            t3: { name: "Teacher Bus - 03", lat: 23.2350, lng: 89.1280, type: "teacher", loc: "Doratana" },
+            s1: { name: "Student Bus - 01", lat: 23.1664, lng: 89.2081, type: "student", loc: "City Center" },
+            s2: { name: "Student Bus - 02", lat: 23.1685, lng: 89.2105, type: "student", loc: "Garikhana" },
+            s3: { name: "Student Bus - 03", lat: 23.1700, lng: 89.2120, type: "student", loc: "Ambika Road" }
+            // আপনি আরও বাস এখানে যোগ করতে পারেন
         };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getDatabase(app);
 
         let map, markers = {}, currentAccess = '';
+        let attempts = 0;
 
-        // লগইন হ্যান্ডলার [cite: 1, 2026-02-11]
-        window.handleLogin = async function() {
+        function handleLogin() {
             const user = document.getElementById('username').value;
             const pass = document.getElementById('password').value;
+            const errorMsg = document.getElementById('error-msg');
+            const loginBtn = document.getElementById('login-btn');
             const selectedPref = document.querySelector('input[name="view-pref"]:checked').value;
             
-            try {
-                // Firebase-এ ইউজার চেক হবে
-                await signInWithEmailAndPassword(auth, user + "@just.com", pass);
-                currentAccess = (user === 'eee' ? 'all' : selectedPref);
-                
+            let authenticated = false;
+
+            if(user === 'EEE' && pass === '1010') {
+                authenticated = true;
+                currentAccess = 'all';
+            } else if(user === 'JUST' && pass === '2020') {
+                authenticated = true;
+                currentAccess = selectedPref;
+            }
+
+            if(authenticated) {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('main-menu-btn').style.display = 'block';
+                document.getElementById('user-display').innerText = (currentAccess === 'all' ? "Admin: Host" : "Role: " + currentAccess.toUpperCase());
                 initMap();
-                listenToBusLocations();
-            } catch (error) {
-                document.getElementById('error-msg').innerText = "Access Denied: Invalid Credentials!";
+                loadSidebar();
+            } else {
+                attempts++;
+                if(attempts >= 3) {
+                    errorMsg.innerHTML = `Access Denied! <a href="mailto:fazlabarimithul@gmail.com">Contact Here</a> to complain.`;
+                    loginBtn.disabled = true;
+                } else {
+                    errorMsg.innerText = `Invalid Credentials! Try Again. (Attempts: ${attempts}/3)`;
+                    // ভুল হলে ইনপুট ক্লিয়ার হবে
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
+                }
             }
-        };
+        }
 
         function initMap() {
             map = L.map('map', { zoomControl: false }).setView([23.2321, 89.1254], 13);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-        }
 
-        // রিয়েল-টাইম লোকেশন লিসেনার [cite: 1, 2026-02-11]
-        function listenToBusLocations() {
-            const busRef = ref(db, 'buses');
-            onValue(busRef, (snapshot) => {
-                const busesData = snapshot.val();
-                const list = document.getElementById('bus-list');
-                list.innerHTML = '';
-
-                for (let id in busesData) {
-                    const bus = busesData[id];
-                    if (currentAccess === 'all' || currentAccess === bus.type) {
-                        // ম্যাপে মার্কার আপডেট [cite: 1, 2026-02-11]
-                        if (markers[id]) {
-                            markers[id].setLatLng([bus.lat, bus.lng]);
-                        } else {
-                            markers[id] = L.marker([bus.lat, bus.lng]).addTo(map)
-                                .bindPopup(`<b>${bus.name}</b><br>📍 ${bus.loc}`);
-                        }
-
-                        // সাইডবারে লিস্ট আপডেট
-                        const item = document.createElement('div');
-                        item.className = 'bus-item';
-                        item.innerHTML = `<strong>${bus.name}</strong><br><small style="color:green">● Live</small>`;
-                        item.onclick = () => {
-                            map.flyTo([bus.lat, bus.lng], 16);
-                            markers[id].openPopup();
-                            toggleMenu();
-                        };
-                        list.appendChild(item);
-                    }
+            Object.keys(buses).forEach(id => {
+                const bus = buses[id];
+                if(currentAccess === 'all' || currentAccess === bus.type) {
+                    const m = L.marker([bus.lat, bus.lng]).addTo(map);
+                    m.bindPopup(`<b>${bus.name}</b><br>📍 ${bus.loc}`);
+                    markers[id] = m;
                 }
             });
         }
 
-        window.toggleMenu = function() {
+        function loadSidebar() {
+            const list = document.getElementById('bus-list');
+            list.innerHTML = '';
+            Object.keys(buses).forEach(id => {
+                const bus = buses[id];
+                if(currentAccess === 'all' || currentAccess === bus.type) {
+                    const item = document.createElement('div');
+                    item.className = 'bus-item';
+                    item.innerHTML = `<strong>${bus.name}</strong><br><small style="color:#27ae60">● Live Now</small><br><span style="font-size:12px; color:#666;">📍 ${bus.loc}</span>`;
+                    item.onclick = () => {
+                        map.flyTo([bus.lat, bus.lng], 16);
+                        markers[id].openPopup();
+                        if(window.innerWidth < 768) toggleMenu();
+                    };
+                    list.appendChild(item);
+                }
+            });
+        }
+
+        function toggleMenu() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('overlay').classList.toggle('active');
-        };
+        }
     </script>
 </body>
 </html>
