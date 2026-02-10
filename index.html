@@ -7,76 +7,75 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         * { box-sizing: border-box; transition: all 0.3s ease; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; height: 100vh; overflow: hidden; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; height: 100vh; overflow: hidden; }
 
         /* Login Screen with Background Image */
         #login-screen {
             position: fixed; inset: 0; 
-            background-image: url('https://fazla-bari-mithu.github.io/images/campus.jpg'); /* আপনার দেওয়া ক্যাম্পাসের ছবি */
-            background-size: cover; 
-            background-position: center; 
+            /* সরাসরি ছবির গিটহাব লিঙ্ক ব্যবহার করা হয়েছে যা নষ্ট হবে না */
+            background-image: url('https://raw.githubusercontent.com/Fazla-Bari-Mithu/images/main/campus_just.jpg'); 
+            background-size: cover; background-position: center; 
             z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
-        /* Dark overlay for better text visibility */
+        /* Dark overlay for readability */
         #login-screen::before {
             content: ''; position: absolute; inset: 0;
-            background: rgba(0, 0, 0, 0.4); z-index: -1;
+            background: rgba(0, 0, 0, 0.45); z-index: -1;
         }
 
-        /* University Title */
         .uni-title {
-            color: white; text-align: center; margin-bottom: 20px;
-            font-size: 1.8rem; font-weight: 800; text-transform: uppercase;
-            text-shadow: 2px 4px 10px rgba(0,0,0,0.8); padding: 0 10px;
+            color: white; text-align: center; margin-bottom: 25px;
+            font-size: clamp(1.2rem, 5vw, 2.2rem); font-weight: 800; 
+            text-transform: uppercase; text-shadow: 2px 4px 12px rgba(0,0,0,0.9);
+            padding: 0 20px; width: 100%;
         }
 
-        /* Glassmorphism Login Box */
+        /* Glassmorphism Design */
         .login-box { 
-            background: rgba(255, 255, 255, 0.15); 
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            padding: 40px; border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.2);
-            text-align: center; width: 90%; max-width: 400px; 
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 0.12); 
+            backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            padding: 40px; border-radius: 35px; border: 1px solid rgba(255, 255, 255, 0.25);
+            text-align: center; width: 92%; max-width: 420px; 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
         }
 
-        .login-box h2 { color: #fff; margin-bottom: 30px; font-size: 24px; letter-spacing: 1px; }
+        .login-box h2 { color: #fff; margin-bottom: 30px; font-size: 26px; font-weight: 700; letter-spacing: 0.5px; }
 
         .login-box input { 
-            width: 100%; padding: 15px; margin: 12px 0; border: none; 
-            border-radius: 12px; background: rgba(255, 255, 255, 0.9);
-            font-size: 16px; outline: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            width: 100%; padding: 16px; margin: 12px 0; border: none; 
+            border-radius: 15px; background: rgba(255, 255, 255, 0.95);
+            font-size: 16px; outline: none; color: #333;
         }
 
-        /* Radio Buttons Design */
         .radio-container { 
-            background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 15px; 
-            margin: 15px 0; border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1); padding: 18px; border-radius: 18px; 
+            margin: 18px 0; border: 1px solid rgba(255, 255, 255, 0.15);
         }
-        .radio-group { display: flex; justify-content: space-around; color: white; font-size: 14px; }
+        .radio-group { display: flex; justify-content: space-around; color: white; font-size: 14px; font-weight: 500; }
         .radio-group label { cursor: pointer; display: flex; align-items: center; gap: 8px; }
 
-        /* Login Button */
         .btn-login { 
-            width: 100%; padding: 16px; background: #27ae60; color: white; 
-            border: none; border-radius: 12px; cursor: pointer; font-weight: bold; 
-            font-size: 18px; margin-top: 20px; box-shadow: 0 10px 20px rgba(39, 174, 96, 0.3);
+            width: 100%; padding: 18px; background: #2ecc71; color: white; 
+            border: none; border-radius: 15px; cursor: pointer; font-weight: 700; 
+            font-size: 18px; margin-top: 20px; box-shadow: 0 10px 25px rgba(46, 204, 113, 0.35);
         }
-        .btn-login:hover { background: #2ecc71; transform: translateY(-3px); box-shadow: 0 15px 25px rgba(39, 174, 96, 0.4); }
-        .btn-login:disabled { background: #7f8c8d; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-login:hover { background: #27ae60; transform: translateY(-3px); box-shadow: 0 15px 30px rgba(46, 204, 113, 0.5); }
+        .btn-login:active { transform: translateY(0); }
+        .btn-login:disabled { background: #95a5a6; cursor: not-allowed; box-shadow: none; }
 
-        #error-msg { margin-top: 15px; font-size: 14px; font-weight: bold; min-height: 20px; }
+        #error-msg { margin-top: 20px; font-size: 14px; font-weight: bold; min-height: 20px; }
 
-        /* Sidebar & Map */
-        .hamburger-menu { position: absolute; top: 20px; left: 20px; z-index: 1100; background: #27ae60; color: white; border: none; padding: 12px 18px; border-radius: 10px; cursor: pointer; display: none; }
-        #sidebar { width: 320px; background: white; z-index: 1200; position: absolute; left: -320px; height: 100%; box-shadow: 5px 0 15px rgba(0,0,0,0.1); }
+        /* Map and Sidebar */
+        .hamburger-menu { position: absolute; top: 20px; left: 20px; z-index: 1100; background: #27ae60; color: white; border: none; padding: 12px 18px; border-radius: 12px; cursor: pointer; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        #sidebar { width: 320px; background: white; z-index: 1200; position: absolute; left: -320px; height: 100%; box-shadow: 10px 0 30px rgba(0,0,0,0.15); }
         #sidebar.active { left: 0; }
         .header { background: #27ae60; color: white; padding: 25px; text-align: center; }
-        #bus-list { flex-grow: 1; overflow-y: auto; padding: 15px; height: calc(100vh - 100px); }
-        .bus-item { padding: 15px; margin-bottom: 10px; background: #f9f9f9; border-radius: 10px; cursor: pointer; border-left: 5px solid #27ae60; }
-        .bus-item:hover { background: #e8f5e9; transform: translateX(5px); }
+        #bus-list { flex-grow: 1; overflow-y: auto; padding: 15px; height: calc(100vh - 110px); }
+        .bus-item { padding: 18px; margin-bottom: 12px; background: #fff; border-radius: 15px; cursor: pointer; border-left: 6px solid #27ae60; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .bus-item:hover { background: #f1f8f4; transform: scale(1.02); }
         #map { width: 100%; height: 100%; z-index: 1; }
-        #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 1150; }
+        #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1150; backdrop-filter: blur(3px); }
         #overlay.active { display: block; }
     </style>
 </head>
@@ -94,7 +93,7 @@
                 </div>
             </div>
 
-            <input type="text" id="username" placeholder="User Name">
+            <input type="text" id="username" placeholder="Username">
             <input type="password" id="password" placeholder="Password">
             
             <button class="btn-login" id="login-btn" onclick="handleLogin()">Login</button>
@@ -106,8 +105,8 @@
 
     <div id="sidebar">
         <div class="header">
-            <button style="float: right; background: none; border: 1px solid white; color: white; border-radius: 5px; cursor: pointer;" onclick="toggleMenu()">✕</button>
-            <div id="user-display" style="font-weight: bold;">Tracking Panel</div>
+            <button style="float: right; background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 12px; border-radius: 8px; cursor: pointer; font-weight: bold;" onclick="toggleMenu()">✕</button>
+            <div id="user-display" style="font-size: 18px; font-weight: 700;">Tracking Panel</div>
         </div>
         <div id="bus-list"></div>
     </div>
@@ -117,22 +116,22 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // বাসের তথ্য (Full List)
+        // বাসের পূর্ণ তালিকা (Teacher 01-10, Student 01-13)
         const buses = {
-            t1: { name: "Teacher Bus - 01", lat: 23.2321, lng: 89.1254, type: "teacher", loc: "Campus Gate" },
-            t2: { name: "Teacher Bus - 02", lat: 23.2335, lng: 89.1265, type: "teacher", loc: "Palbari" },
+            t1: { name: "Teacher Bus - 01", lat: 23.2321, lng: 89.1254, type: "teacher", loc: "Campus Main Gate" },
+            t2: { name: "Teacher Bus - 02", lat: 23.2335, lng: 89.1265, type: "teacher", loc: "Palbari Mor" },
             t3: { name: "Teacher Bus - 03", lat: 23.2350, lng: 89.1280, type: "teacher", loc: "Doratana" },
             t4: { name: "Teacher Bus - 04", lat: 23.2365, lng: 89.1295, type: "teacher", loc: "New Market" },
             t5: { name: "Teacher Bus - 05", lat: 23.2380, lng: 89.1310, type: "teacher", loc: "Rail Station" },
-            t6: { name: "Teacher Bus - 06", lat: 23.2395, lng: 89.1325, type: "teacher", loc: "Monihar" },
+            t6: { name: "Teacher Bus - 06", lat: 23.2395, lng: 89.1325, type: "teacher", loc: "Monihar Mor" },
             t7: { name: "Teacher Bus - 07", lat: 23.2410, lng: 89.1340, type: "teacher", loc: "Khayertala" },
             t8: { name: "Teacher Bus - 08", lat: 23.2425, lng: 89.1355, type: "teacher", loc: "Chuti Gate" },
-            t9: { name: "Teacher Bus - 09", lat: 23.2440, lng: 89.1370, type: "teacher", loc: "Vashkorjo" },
-            t10: { name: "Teacher Bus - 10", lat: 23.2455, lng: 89.1385, type: "teacher", loc: "Medical" },
+            t9: { name: "Teacher Bus - 09", lat: 23.2440, lng: 89.1370, type: "teacher", loc: "Vashkorjo Mor" },
+            t10: { name: "Teacher Bus - 10", lat: 23.2455, lng: 89.1385, type: "teacher", loc: "Medical College" },
             s1: { name: "Student Bus - 01", lat: 23.1664, lng: 89.2081, type: "student", loc: "City Center" },
             s2: { name: "Student Bus - 02", lat: 23.1685, lng: 89.2105, type: "student", loc: "Garikhana" },
             s3: { name: "Student Bus - 03", lat: 23.1700, lng: 89.2120, type: "student", loc: "Ambika Road" },
-            s4: { name: "Student Bus - 04", lat: 23.1725, lng: 89.2145, type: "student", loc: "Kotwali" },
+            s4: { name: "Student Bus - 04", lat: 23.1725, lng: 89.2145, type: "student", loc: "Kotwali PS" },
             s5: { name: "Student Bus - 05", lat: 23.1750, lng: 89.2165, type: "student", loc: "Civil Court" },
             s6: { name: "Student Bus - 06", lat: 23.1775, lng: 89.2185, type: "student", loc: "Collectrate" },
             s7: { name: "Student Bus - 07", lat: 23.1800, lng: 89.2210, type: "student", loc: "Circuit House" },
@@ -147,8 +146,8 @@
         let map, markers = {}, currentAccess = '', attempts = 0;
 
         function handleLogin() {
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
             const errorMsg = document.getElementById('error-msg');
             const loginBtn = document.getElementById('login-btn');
             const selectedPref = document.querySelector('input[name="view-pref"]:checked').value;
@@ -162,10 +161,12 @@
             } else {
                 attempts++;
                 if(attempts >= 3) {
-                    errorMsg.innerHTML = `<span style="color: #ff4d4d;">Access Denied! <a href="mailto:fazlabarimithul@gmail.com" style="color:white;">Contact Here</a></span>`;
+                    errorMsg.innerHTML = `<span style="color: #ff4d4d;">Access Denied! <a href="mailto:fazlabarimithul@gmail.com" style="color:#fff; text-decoration: underline;">Contact Admin</a></span>`;
                     loginBtn.disabled = true;
                 } else {
-                    errorMsg.innerHTML = `<span style="color: #ffeb3b;">Wrong Login! Attempts: ${attempts}/3</span>`;
+                    errorMsg.innerHTML = `<span style="color: #fffa65;">Invalid Credentials! (${attempts}/3)</span>`;
+                    document.getElementById('username').value = '';
+                    document.getElementById('password').value = '';
                 }
             }
         }
@@ -178,7 +179,7 @@
                 const bus = buses[id];
                 if(currentAccess === 'all' || currentAccess === bus.type) {
                     const m = L.marker([bus.lat, bus.lng]).addTo(map);
-                    m.bindPopup(`<b>${bus.name}</b><br>📍 ${bus.loc}`);
+                    m.bindPopup(`<b>${bus.name}</b><br>📍 Location: ${bus.loc}`);
                     markers[id] = m;
                 }
             });
@@ -192,7 +193,7 @@
                 if(currentAccess === 'all' || currentAccess === bus.type) {
                     const item = document.createElement('div');
                     item.className = 'bus-item';
-                    item.innerHTML = `<strong>${bus.name}</strong><br><small>📍 ${bus.loc}</small>`;
+                    item.innerHTML = `<strong>${bus.name}</strong><br><small style="color:#666">📍 ${bus.loc}</small>`;
                     item.onclick = () => {
                         map.flyTo([bus.lat, bus.lng], 16);
                         markers[id].openPopup();
