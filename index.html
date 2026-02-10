@@ -9,6 +9,29 @@
         * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; height: 100vh; overflow: hidden; background: #f4f4f4; }
 
+        /* ইউনিভার্সিটি নাম ডিজাইন - মোবাইল ও পিসির জন্য রেসপন্সিভ */
+        .university-header {
+            position: absolute;
+            top: 4%;
+            width: 100%;
+            text-align: center;
+            z-index: 10000;
+            padding: 0 15px;
+            pointer-events: none; /* যাতে লগইন বক্সে ক্লিক করতে সমস্যা না হয় */
+        }
+        .university-header h1 {
+            color: white;
+            font-size: clamp(1.1rem, 4.5vw, 2.2rem); /* ফন্ট সাইজ অটো ছোট-বড় হবে */
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            /* বাঁকা এবং থ্রি-ডি লুক */
+            transform: perspective(500px) rotateX(10deg) skew(-5deg);
+            text-shadow: 3px 5px 15px rgba(0,0,0,0.4);
+            margin: 0;
+            line-height: 1.2;
+        }
+
         /* Login Screen with Animated Background */
         #login-screen {
             position: fixed; inset: 0; 
@@ -25,7 +48,9 @@
 
         .login-box { 
             background: rgba(255, 255, 255, 0.95); padding: 35px; border-radius: 25px; 
-            text-align: center; width: 380px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); backdrop-filter: blur(10px);
+            text-align: center; width: 90%; max-width: 380px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); backdrop-filter: blur(10px);
+            margin-top: 60px; /* যাতে উপরের টাইটেলের সাথে লেগে না যায় */
         }
         .login-box h2 { color: #27ae60; margin-bottom: 25px; font-weight: 800; }
         .login-box input { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 15px; outline: none; }
@@ -54,6 +79,10 @@
 <body>
 
     <div id="login-screen">
+        <div class="university-header">
+            <h1>Jashore University of Science and Technology</h1>
+        </div>
+
         <div class="login-box">
             <h2>Mithu Just</h2>
             
@@ -88,7 +117,6 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // বাসের ডাটাবেস (২৩টি বাস)
         const buses = {
             t1: { name: "Teacher Bus - 01", lat: 23.2321, lng: 89.1254, type: "teacher", loc: "Campus Main Gate" },
             t2: { name: "Teacher Bus - 02", lat: 23.2335, lng: 89.1265, type: "teacher", loc: "Palbari Mor" },
@@ -126,10 +154,10 @@
 
             if(user === 'EEE' && pass === '1010') {
                 authenticated = true;
-                currentAccess = 'all'; // হোস্ট সব দেখবে
+                currentAccess = 'all';
             } else if(user === 'JUST' && pass === '2020') {
                 authenticated = true;
-                currentAccess = selectedPref; // ইউজার সিলেকশন অনুযায়ী দেখবে
+                currentAccess = selectedPref;
             }
 
             if(authenticated) {
@@ -183,4 +211,3 @@
     </script>
 </body>
 </html>
-
