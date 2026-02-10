@@ -34,15 +34,10 @@
         /* Login Screen with Image Background */
         #login-screen {
             position: fixed; inset: 0; 
-            /* আপনার দেওয়া ব্যাকগ্রাউন্ড ছবিটি এখানে যোগ করা হয়েছে */
-            background-image: url('https://i.imgur.com/your-image-link-here.jpg'); /* !!! এখানে আপনার Image 2 এর CDN Link বসাতে হবে !!! */
-            background-size: cover; /* ছবিটি যেন পুরো ব্যাকগ্রাউন্ড কভার করে */
-            background-position: center center; /* ছবিটি সেন্টারে থাকে */
-            background-repeat: no-repeat; /* ছবিটি যেন রিপিট না হয় */
-            
-            /* আগের Gradient এবং Animation অপ্রয়োজনীয়, তাই বাদ দেওয়া হলো।
-               যদিGradient overlay চান, তাহলে ::before বা অন্য একটি div ব্যবহার করতে হবে।
-               আমি এখন শুধু ইমেজ রেখেছি। */
+            background-image: url('https://i.ibb.co/C10T4vH/image-2.jpg'); /* !!! এখানে আপনার Image 2 এর CDN Link বসানো হয়েছে !!! */
+            background-size: cover; 
+            background-position: center center; 
+            background-repeat: no-repeat; 
             
             z-index: 9999; display: flex; align-items: center; justify-content: center;
         }
