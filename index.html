@@ -31,14 +31,30 @@
             line-height: 1.2;
         }
 
-        /* Login Screen */
+        /* Login Screen with Image Background */
         #login-screen {
             position: fixed; inset: 0; 
-            background: linear-gradient(-45deg, #27ae60, #2ecc71, #1abc9c, #16a085);
-            background-size: 400% 400%; animation: gradientBG 15s ease infinite;
+            /* আপনার দেওয়া ব্যাকগ্রাউন্ড ছবিটি এখানে যোগ করা হয়েছে */
+            background-image: url('https://i.imgur.com/your-image-link-here.jpg'); /* !!! এখানে আপনার Image 2 এর CDN Link বসাতে হবে !!! */
+            background-size: cover; /* ছবিটি যেন পুরো ব্যাকগ্রাউন্ড কভার করে */
+            background-position: center center; /* ছবিটি সেন্টারে থাকে */
+            background-repeat: no-repeat; /* ছবিটি যেন রিপিট না হয় */
+            
+            /* আগের Gradient এবং Animation অপ্রয়োজনীয়, তাই বাদ দেওয়া হলো।
+               যদিGradient overlay চান, তাহলে ::before বা অন্য একটি div ব্যবহার করতে হবে।
+               আমি এখন শুধু ইমেজ রেখেছি। */
+            
             z-index: 9999; display: flex; align-items: center; justify-content: center;
         }
-        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        /* যদি আপনার image এর উপর একটি হালকা overlay বা filter চান, তাহলে এটি ব্যবহার করতে পারেন: */
+        #login-screen::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4); /* কালো রঙের 40% অস্বচ্ছ একটি ওভারলে */
+            z-index: -1; /* ইমেজের উপরে কিন্তু লগইন বক্সের নিচে */
+        }
+
 
         .login-box { 
             background: rgba(255, 255, 255, 0.95); padding: 35px; border-radius: 25px; 
@@ -56,16 +72,16 @@
 
         .btn-login { width: 100%; padding: 15px; background: #27ae60; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 17px; margin-top: 15px; transition: 0.3s; }
         .btn-login:hover { background: #219150; transform: translateY(-2px); }
-        .btn-login:disabled { background: #95a5a6; cursor: not-allowed; transform: none; }
+        .btn-login:disabled { background: #95a5a6; cursor: not-allowed; opacity: 0.7; }
 
         /* Sidebar & Map */
         .hamburger-menu { position: absolute; top: 20px; left: 20px; z-index: 1100; background: #27ae60; color: white; border: none; padding: 12px 18px; border-radius: 10px; cursor: pointer; display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        #sidebar { width: 320px; background: white; border-right: 1px solid #eee; display: flex; flex-direction: column; z-index: 1200; position: absolute; left: -320px; height: 100%; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        #sidebar { width: 320px; background: white; border-right: 1px solid #eee; display: flex; flex-direction: column; z-index: 1200; position: absolute; left: -320px; height: 100%; transition: 0.5s; }
         #sidebar.active { left: 0; }
         .header { background: #27ae60; color: white; padding: 25px; text-align: center; }
         #bus-list { flex-grow: 1; overflow-y: auto; padding: 15px; background: #fdfdfd; }
-        .bus-item { padding: 18px; margin-bottom: 12px; background: #fff; border: 1px solid #f0f0f0; border-radius: 12px; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .bus-item:hover { border-color: #27ae60; background: #f0fff4; transform: scale(1.02); }
+        .bus-item { padding: 18px; margin-bottom: 12px; background: #fff; border: 1px solid #f0f0f0; border-radius: 12px; cursor: pointer; transition: 0.2s; }
+        .bus-item:hover { border-color: #27ae60; background: #f0fff4; }
         #map { width: 100%; height: 100%; z-index: 1; }
         #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 1150; backdrop-filter: blur(2px); }
         #overlay.active { display: block; }
@@ -118,10 +134,27 @@
             t1: { name: "Teacher Bus - 01", lat: 23.2321, lng: 89.1254, type: "teacher", loc: "Campus Main Gate" },
             t2: { name: "Teacher Bus - 02", lat: 23.2335, lng: 89.1265, type: "teacher", loc: "Palbari Mor" },
             t3: { name: "Teacher Bus - 03", lat: 23.2350, lng: 89.1280, type: "teacher", loc: "Doratana" },
+            t4: { name: "Teacher Bus - 04", lat: 23.2365, lng: 89.1295, type: "teacher", loc: "New Market" },
+            t5: { name: "Teacher Bus - 05", lat: 23.2380, lng: 89.1310, type: "teacher", loc: "Rail Station" },
+            t6: { name: "Teacher Bus - 06", lat: 23.2395, lng: 89.1325, type: "teacher", loc: "Monihar Mor" },
+            t7: { name: "Teacher Bus - 07", lat: 23.2410, lng: 89.1340, type: "teacher", loc: "Khayertala" },
+            t8: { name: "Teacher Bus - 08", lat: 23.2425, lng: 89.1355, type: "teacher", loc: "Chuti Gate" },
+            t9: { name: "Teacher Bus - 09", lat: 23.2440, lng: 89.1370, type: "teacher", loc: "Vashkorjo Mor" },
+            t10: { name: "Teacher Bus - 10", lat: 23.2455, lng: 89.1385, type: "teacher", loc: "Medical College" },
+
             s1: { name: "Student Bus - 01", lat: 23.1664, lng: 89.2081, type: "student", loc: "City Center" },
             s2: { name: "Student Bus - 02", lat: 23.1685, lng: 89.2105, type: "student", loc: "Garikhana" },
-            s3: { name: "Student Bus - 03", lat: 23.1700, lng: 89.2120, type: "student", loc: "Ambika Road" }
-            // আপনি আরও বাস এখানে যোগ করতে পারেন
+            s3: { name: "Student Bus - 03", lat: 23.1700, lng: 89.2120, type: "student", loc: "Ambika Road" },
+            s4: { name: "Student Bus - 04", lat: 23.1725, lng: 89.2145, type: "student", loc: "Kotwali PS" },
+            s5: { name: "Student Bus - 05", lat: 23.1750, lng: 89.2165, type: "student", loc: "Civil Court" },
+            s6: { name: "Student Bus - 06", lat: 23.1775, lng: 89.2185, type: "student", loc: "Collectrate" },
+            s7: { name: "Student Bus - 07", lat: 23.1800, lng: 89.2210, type: "student", loc: "Circuit House" },
+            s8: { name: "Student Bus - 08", lat: 23.1825, lng: 89.2235, type: "student", loc: "Police Line" },
+            s9: { name: "Student Bus - 09", lat: 23.1850, lng: 89.2260, type: "student", loc: "Cantonment" },
+            s10: { name: "Student Bus - 10", lat: 23.1875, lng: 89.2285, type: "student", loc: "Dharmatala" },
+            s11: { name: "Student Bus - 11", lat: 23.1900, lng: 89.2310, type: "student", loc: "Arabpur" },
+            s12: { name: "Student Bus - 12", lat: 23.1925, lng: 89.2335, type: "student", loc: "Hamidpur" },
+            s13: { name: "Student Bus - 13", lat: 23.1950, lng: 89.2360, type: "student", loc: "Murali Mor" }
         };
 
         let map, markers = {}, currentAccess = '';
@@ -157,7 +190,6 @@
                     loginBtn.disabled = true;
                 } else {
                     errorMsg.innerText = `Invalid Credentials! Try Again. (Attempts: ${attempts}/3)`;
-                    // ভুল হলে ইনপুট ক্লিয়ার হবে
                     document.getElementById('username').value = '';
                     document.getElementById('password').value = '';
                 }
@@ -165,6 +197,7 @@
         }
 
         function initMap() {
+            if (map) return; // Map already initialized
             map = L.map('map', { zoomControl: false }).setView([23.2321, 89.1254], 13);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
